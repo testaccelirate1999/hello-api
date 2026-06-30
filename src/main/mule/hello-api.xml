@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		<http:listener-connection host="0.0.0.0" port="8081"  config-ref="HTTP_Listener_config"/>
 	</http:listener-config>
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="f600b910-eb3c-4c9d-8f76-d2d4811bf83b" >
-		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
+		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" service="${db.service}" />
 	</db:config>
 	<flow name="hello-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
 		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello"/>
