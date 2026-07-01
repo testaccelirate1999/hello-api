@@ -7,11 +7,11 @@ http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/htt
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
 http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
 	<configuration-properties file="application.properties" doc:name="Config Properties" />
-	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0204d4ba-1615-4250-afdc-edfae738f140"  config-ref="HTTP_Listener_config">
-		<http:listener-connection host="0.0.0.0" port="8081"  config-ref="HTTP_Listener_config"/>
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0204d4ba-1615-4250-afdc-edfae738f140">
+		<http:listener-connection host="0.0.0.0" port="8081"/>
 	</http:listener-config>
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="f600b910-eb3c-4c9d-8f76-d2d4811bf83b" >
-		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" service="${db.service}" />
+		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
 	</db:config>
 	<flow name="hello-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
 		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello"/>
@@ -27,8 +27,9 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<db:insert doc:name="Insert" doc:id="f2f9e201-52aa-4b17-b000-90c67b016b1a" config-ref="Database_Config">
-			<db:sql ><![CDATA[INSERT]]></db:sql>
-		</db:insert>
+		<logger level="INFO" doc:name="Logger" doc:id="3468058b-314b-41b7-a977-0049b2658271" message="#[payload]" category="LOKI"/>
+		<!-- [STUDIO:"Insert"]<db:insert doc:name="Insert" doc:id="f2f9e201-52aa-4b17-b000-90c67b016b1a" config-ref="Database_Config">
+			<db:sql ><![CDATA[INSERT&#93;&#93;></db:sql>
+		</db:insert> [STUDIO] -->
 	</flow>
 </mule>
