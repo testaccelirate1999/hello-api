@@ -27,7 +27,9 @@ output application/json
 {
 	"Message": "Hello " ++ (payload.name default ""),
 	"Name": "Name" ++ (payload.named default ""),
-	"Address": "City" ++ (payload.city default "")
+	"Address": "City" ++ (payload.city default ""),
+	"Company": "Company: " ++ payload.company,
+	"CompanyAdd": "CompanyAdd: " ++ payload.companyAdd
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
