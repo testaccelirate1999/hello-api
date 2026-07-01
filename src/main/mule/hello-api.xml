@@ -30,7 +30,7 @@ output application/json
 	"Address": "City" ++ (payload.city default ""),
 	"Company": "Company: " ++ (payload.company default ""),
 	"CompanyAdd": "CompanyAdd: " ++ (payload.companyAdd default ""),
-	"CompanyAdd2": "CompanyAdd2: " ++ (payload.companyAdd2)
+	"CompanyAdd2": "CompanyAdd2: " ++ (payload.companyAdd2 default "")
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
