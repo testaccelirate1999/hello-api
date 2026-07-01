@@ -13,7 +13,7 @@
             <url>https://logs-prod-028.grafana.net/loki/api/v1/push</url>
 
             <username>1667259</username>
-            <password>password</password>
+            <password>glc_eyJvIjoiMTgzMDY0NCIsIm4iOiJtdWxlLWxva2ktcHVzaC1tdWxlc29mdCIsImsiOiJKZjg1dWtZNDgxbDhlWTRjTzVManJCOTMiLCJtIjp7InIiOiJ1cyJ9fQ==</password>
 
             <PatternLayout>
                 <Pattern>%-5p %d [%t] %c: %m%n</Pattern>

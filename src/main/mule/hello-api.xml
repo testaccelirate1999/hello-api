@@ -14,7 +14,11 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
 	</db:config>
 	<flow name="hello-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
-		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello"/>
+		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello">
+			<http:error-response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
 		<ee:transform doc:name="Transform Message" doc:id="988e5d3f-9a67-4b46-803f-eab82c284978" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -22,7 +26,7 @@ output application/json
 ---
 {
 	"Message": "Hello " ++ (payload.name default ""),
-	"Name": "Name"++ (payload.named default ""),
+	"Name": "Name"++ (payload.named),
 	"Address": "City" ++ (payload.city default "")
 }]]></ee:set-payload>
 			</ee:message>
@@ -31,5 +35,29 @@ output application/json
 		<!-- [STUDIO:"Insert"]<db:insert doc:name="Insert" doc:id="f2f9e201-52aa-4b17-b000-90c67b016b1a" config-ref="Database_Config">
 			<db:sql ><![CDATA[INSERT&#93;&#93;></db:sql>
 		</db:insert> [STUDIO] -->
+		<error-handler ref="hello-apiError_Handler" />
 	</flow>
+	<error-handler name="hello-apiError_Handler" doc:id="4ad35767-6b33-4e2e-9873-04c2a0d3e87a" >
+		<on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate" doc:id="cc21d3d2-37cb-4fa5-a4a3-e244739243bb" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="f29649cd-790c-4da5-9a65-c9629e579a6e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    correlationId: correlationId,
+    error: {
+        description: error.description,
+        detailedDescription: error.detailedDescription,
+        errorType: error.errorType.identifier,
+        namespace: error.errorType.namespace,
+        component: error.failingComponent
+    },
+    payload: payload
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="INFO" doc:name="Logger" doc:id="d8fafa7f-15d6-4fb4-ad41-07cbfe79000e" message="#[payload]" category="LOKI"/>
+		</on-error-propagate>
+	</error-handler>
 </mule>
