@@ -28,8 +28,8 @@ output application/json
 	"Message": "Hello " ++ (payload.name default ""),
 	"Name": "Name" ++ (payload.named default ""),
 	"Address": "City" ++ (payload.city default ""),
-	"Company": "Company: " ++ payload.company,
-	"CompanyAdd": "CompanyAdd: " ++ payload.companyAdd
+	"Company": "Company: " ++ (payload.company default ""),
+	"CompanyAdd": "CompanyAdd: " ++ (payload.companyAdd default "")
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
