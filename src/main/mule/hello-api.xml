@@ -15,11 +15,13 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
 	</db:config>
 	<redis:redis-config name="Redis_Redis" doc:name="Redis Redis" doc:id="668e283a-83c6-48dc-9dc4-eaa43bce5378" >
-		<redis:nonclustered-connection />
+		<redis:nonclustered-connection host="127.0.0.1"/>
 	</redis:redis-config>
 	<flow name="hello-apiFlow1" doc:id="8a97e8ff-9075-4562-81d0-a9ec0fc2c92f" >
-		<redis:set doc:name="Set" doc:id="cd619a7a-f2b5-4d8a-8322-10a86b1ad01f" config-ref="Redis_Redis" key="data"/>
-		<redis:get doc:name="Get" doc:id="591449dc-0a0d-4396-ad8b-5689fd0d57a8" key="data"/>
+		<redis:set doc:name="Set" doc:id="cd619a7a-f2b5-4d8a-8322-10a86b1ad01f" config-ref="Redis_Redis" key="data">
+			<redis:value><![CDATA[#[output text/plain --- write(payload, 'application/json')]]]></redis:value>
+		</redis:set>
+		<redis:get doc:name="Get" doc:id="591449dc-0a0d-4396-ad8b-5689fd0d57a8" key="data" config-ref="Redis_Redis"/>
 	</flow>
 	<flow name="hello-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
 		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello">
