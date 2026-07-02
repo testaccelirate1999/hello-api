@@ -1,0 +1,11 @@
+%dw 2.0
+
+type auto_8a97e8ff_9075_4562_81d0_a9ec0fc2c92f_Input_Payload = {|
+  Message: Any, 
+  Name: Any, 
+  Address: Any, 
+  Company: Any, 
+  CompanyAdd: Any, 
+  CompanyAdd2: Any
+|}
+

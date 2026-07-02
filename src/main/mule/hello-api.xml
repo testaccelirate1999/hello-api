@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
-	xmlns:http="http://www.mulesoft.org/schema/mule/http"
-	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+<mule xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
 http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
 http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
-http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd">
 	<configuration-properties file="application.properties" doc:name="Config Properties" />
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0204d4ba-1615-4250-afdc-edfae738f140">
 		<http:listener-connection host="0.0.0.0" port="8081"/>
@@ -13,6 +14,13 @@ http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/cu
 	<db:config name="Database_Config" doc:name="Database Config" doc:id="f600b910-eb3c-4c9d-8f76-d2d4811bf83b" >
 		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
 	</db:config>
+	<redis:redis-config name="Redis_Redis" doc:name="Redis Redis" doc:id="668e283a-83c6-48dc-9dc4-eaa43bce5378" >
+		<redis:nonclustered-connection />
+	</redis:redis-config>
+	<flow name="hello-apiFlow1" doc:id="8a97e8ff-9075-4562-81d0-a9ec0fc2c92f" >
+		<redis:set doc:name="Set" doc:id="cd619a7a-f2b5-4d8a-8322-10a86b1ad01f" config-ref="Redis_Redis" key="data"/>
+		<redis:get doc:name="Get" doc:id="591449dc-0a0d-4396-ad8b-5689fd0d57a8" key="data"/>
+	</flow>
 	<flow name="hello-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
 		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello">
 			<http:error-response >
@@ -34,10 +42,8 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="hello-apiFlow1"/>
 		<logger level="INFO" doc:name="Logger" doc:id="3468058b-314b-41b7-a977-0049b2658271" message="#[payload]" category="LOKI"/>
-		<!-- [STUDIO:"Insert"]<db:insert doc:name="Insert" doc:id="f2f9e201-52aa-4b17-b000-90c67b016b1a" config-ref="Database_Config">
-			<db:sql ><![CDATA[INSERT&#93;&#93;></db:sql>
-		</db:insert> [STUDIO] -->
 		<error-handler ref="hello-apiError_Handler" />
 	</flow>
 	<error-handler name="hello-apiError_Handler" doc:id="4ad35767-6b33-4e2e-9873-04c2a0d3e87a" >
@@ -60,7 +66,7 @@ output application/json
 }]]></ee:set-payload>
 				</ee:message>
 			</ee:transform>
-			<logger level="INFO" doc:name="Logger" doc:id="d8fafa7f-15d6-4fb4-ad41-07cbfe79000e" message="#[payload]" category="LOKI"/>
+			<logger level="ERROR" doc:name="Logger" doc:id="d8fafa7f-15d6-4fb4-ad41-07cbfe79000e" message="#[payload]" category="LOKI"/>
 		</on-error-propagate>
 	</error-handler>
 </mule>
