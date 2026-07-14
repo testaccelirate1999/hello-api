@@ -30,12 +30,6 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
-					<sharedLibraries>
-						<sharedLibrary>
-							<groupId>com.mycompany</groupId>
-							<artifactId>ojdbc17</artifactId>
-						</sharedLibrary>
-					</sharedLibraries>
 					<cloudhub2Deployment>
 						<uri>https://anypoint.mulesoft.com</uri>
 						<provider>MC</provider>
@@ -82,11 +76,6 @@
 			<groupId>pl.tkowalcz.tjahzi</groupId>
 			<artifactId>log4j2-appender-nodep</artifactId>
 			<version>0.9.39</version>
-		</dependency>
-		<dependency>
-			<groupId>com.mycompany</groupId>
-			<artifactId>ojdbc17</artifactId>
-			<version>0.1</version>
 		</dependency>
 		<dependency>
 			<groupId>com.mulesoft.modules</groupId>
