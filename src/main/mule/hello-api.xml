@@ -11,9 +11,6 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0204d4ba-1615-4250-afdc-edfae738f140">
 		<http:listener-connection host="0.0.0.0" port="8081"/>
 	</http:listener-config>
-	<db:config name="Database_Config" doc:name="Database Config" doc:id="f600b910-eb3c-4c9d-8f76-d2d4811bf83b" >
-		<db:oracle-connection host="${db.host}" port="${db.port}" user="${db.user}" password="${db.password}" />
-	</db:config>
 	<redis:redis-config name="Redis_Redis" doc:name="Redis Redis" doc:id="668e283a-83c6-48dc-9dc4-eaa43bce5378" >
 		<redis:nonclustered-connection host="${redis.host}" port="${redis.port}"/>
 	</redis:redis-config>
