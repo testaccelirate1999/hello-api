@@ -54,6 +54,20 @@ jobs:
     - uses: actions/download-artifact@v4
       with:
         name: artifacts
+    - name: Generate Maven settings.xml
+      run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>anypoint-exchange-v3</id>
+                <username>~~~Client~~~</username>
+                <password>${{ secrets.ANYPOINT_CLIENT_ID }}~?~${{ secrets.ANYPOINT_CLIENT_SECRET }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
     - name: Deploy to Sandbox
       env:
         USERNAME: ${{ secrets.anypoint_platform_username }}
