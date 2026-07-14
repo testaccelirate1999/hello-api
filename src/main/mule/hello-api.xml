@@ -32,16 +32,15 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 output application/json
 ---
 {
-	"Message": "Hello " ++ (payload.name default ""),
-	"Name": "Name" ++ (payload.named default ""),
-	"Address": "City" ++ (payload.city default ""),
-	"Company": "Company: " ++ (payload.company default ""),
-	"CompanyAdd": "CompanyAdd: " ++ (payload.companyAdd ),
-	"CompanyAdd2": "CompanyAdd2: " ++ (payload.companyAdd2 default "")
+	"Message": "Hello " ++ (payload.name)
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
-		<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="hello-apiFlow1"/>
+		<choice doc:name="Choice" doc:id="67a2418f-17e2-455a-ba6f-4159aa2ff278" >
+			<when expression="#[payload.radisStore]">
+				<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="hello-apiFlow1" />
+			</when>
+		</choice>
 		<logger level="INFO" doc:name="Logger" doc:id="3468058b-314b-41b7-a977-0049b2658271" message="#[payload]" category="LOKI"/>
 		<error-handler ref="hello-apiError_Handler" />
 	</flow>
