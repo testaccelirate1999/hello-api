@@ -4,7 +4,7 @@
 
 	<groupId>8bbf1a78-88ba-4065-addc-ae6b6150b97c</groupId>
 	<artifactId>hello-api</artifactId>
-	<version>1.0.${env.GITHUB_RUN_NUMBER}-${env.GITHUB_RUN_ATTEMPT}</version>
+	<version>1.0.20</version>
 	<packaging>mule-application</packaging>
 
 	<name>hello-api</name>
