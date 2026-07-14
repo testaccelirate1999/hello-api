@@ -30,12 +30,13 @@
 				<version>${mule.maven.plugin.version}</version>
 				<extensions>true</extensions>
 				<configuration>
+					<classifier>mule-application</classifier>
 					<cloudhub2Deployment>
 						<uri>https://anypoint.mulesoft.com</uri>
 						<provider>MC</provider>
-						<!-- TODO: set to your target Anypoint environment, e.g. Sandbox / Production -->
+						<!-- TODO: confirm this matches your Anypoint environment name exactly (case-sensitive) -->
 						<environment>Sandbox</environment>
-						<!-- TODO: set to your CloudHub 2.0 shared space or private space name -->
+						<!-- Shared Space, US East (Ohio) -->
 						<target>Cloudhub-US-East-2</target>
 						<muleVersion>${app.runtime}</muleVersion>
 						<server>anypoint-exchange-v3</server>
