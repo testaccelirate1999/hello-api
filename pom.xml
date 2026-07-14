@@ -39,6 +39,7 @@
 						<muleVersion>${app.runtime}</muleVersion>
 						<connectedAppClientId>${anypoint.clientId}</connectedAppClientId>
 						<connectedAppClientSecret>${anypoint.clientSecret}</connectedAppClientSecret>
+						<server>anypoint-exchange-v3</server>
 						<connectedAppGrantType>client_credentials</connectedAppGrantType>
 						<applicationName>${project.artifactId}</applicationName>
 						<replicas>1</replicas>
