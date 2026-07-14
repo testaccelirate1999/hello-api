@@ -4,7 +4,7 @@
 
 	<groupId>8bbf1a78-88ba-4065-addc-ae6b6150b97c</groupId>
 	<artifactId>hello-api</artifactId>
-	<version>1.0.20</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>mule-application</packaging>
 
 	<name>hello-api</name>
@@ -99,6 +99,9 @@
 			<name>Corporate Repository</name>
 			<url>https://maven.anypoint.mulesoft.com/api/v3/organizations/8bbf1a78-88ba-4065-addc-ae6b6150b97c/maven</url>
 			<layout>default</layout>
+			<snapshots>
+            	<enabled>true</enabled>
+        	</snapshots>
 		</repository>
 	</distributionManagement>
 
