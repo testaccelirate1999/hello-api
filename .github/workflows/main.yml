@@ -41,4 +41,4 @@ jobs:
           EOF
 
       - name: Build, publish to Exchange, and deploy to CloudHub 2.0
-        run: mvn -B clean deploy
+        run: mvn -B clean deploy -DmuleDeploy -Danypoint.clientId=${{ secrets.ANYPOINT_CLIENT_ID }} -Danypoint.clientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }}
