@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout this repo
@@ -43,9 +43,7 @@ jobs:
       - name: Publish Asset to Anypoint Exchange
         # This executes the standard Maven deploy to push the artifact to Exchange
         run: mvn -B clean deploy 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Deploy to CloudHub 2.0
         # This explicitly calls the Mule plugin to deploy the now-existing Exchange asset
         run: mvn -B mule:deploy -Danypoint.clientId=${{ secrets.ANYPOINT_CLIENT_ID }} -Danypoint.clientSecret=${{ secrets.ANYPOINT_CLIENT_SECRET }}
