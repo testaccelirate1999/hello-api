@@ -38,4 +38,4 @@ jobs:
           EOF
 
       - name: Build, publish to Exchange, and deploy
-        run: mvn -B clean deploy
+        run: mvn -B -e -X clean deploy
