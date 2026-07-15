@@ -32,7 +32,7 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 output application/json
 ---
 {
-	"Message": "Hello " ++ (payload.name default "")
+	"Message": "Hello " ++ (payload.name)
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
