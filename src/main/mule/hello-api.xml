@@ -26,20 +26,28 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
 			</http:error-response>
 		</http:listener>
-		<ee:transform doc:name="Transform Message" doc:id="988e5d3f-9a67-4b46-803f-eab82c284978" >
-			<ee:message >
-				<ee:set-payload ><![CDATA[%dw 2.0
+		<choice doc:name="Choice" doc:id="67a2418f-17e2-455a-ba6f-4159aa2ff278" >
+			<when expression="#[vars.payload.radisStore]">
+				<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="hello-apiFlow1" />
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="988e5d3f-9a67-4b46-803f-eab82c284978">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
 output application/json
 ---
 {
 	"Message": "Hello " ++ (payload.name default "")
 }]]></ee:set-payload>
 			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="payload"><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
 		</ee:transform>
-		<choice doc:name="Choice" doc:id="67a2418f-17e2-455a-ba6f-4159aa2ff278" >
-			<when expression="#[payload.radisStore]">
-				<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="hello-apiFlow1" />
-			</when>
+			</otherwise>
 		</choice>
 		<logger level="INFO" doc:name="Logger" doc:id="3468058b-314b-41b7-a977-0049b2658271" message="#[payload]" category="LOKI"/>
 		<error-handler ref="hello-apiError_Handler" />
