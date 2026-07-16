@@ -37,7 +37,7 @@ http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/re
 output application/json
 ---
 {
-	"Message": "Hello " ++ (payload.name)
+	"Message": "Hello " ++ (payload.name default "Accelirate")
 }]]></ee:set-payload>
 			</ee:message>
 			<ee:variables>
