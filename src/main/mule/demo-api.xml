@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:redis="http://www.mulesoft.org/schema/mule/redis" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/redis http://www.mulesoft.org/schema/mule/redis/current/mule-redis.xsd">
+	<configuration-properties file="application.properties" doc:name="Config Properties" />
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0204d4ba-1615-4250-afdc-edfae738f140">
+		<http:listener-connection host="0.0.0.0" port="8081"/>
+	</http:listener-config>
+	<redis:redis-config name="Redis_Redis" doc:name="Redis Redis" doc:id="668e283a-83c6-48dc-9dc4-eaa43bce5378" >
+		<redis:nonclustered-connection host="${redis.host}" port="${redis.port}"/>
+	</redis:redis-config>
+	<flow name="demo-apiFlow1" doc:id="8a97e8ff-9075-4562-81d0-a9ec0fc2c92f" >
+		<redis:set doc:name="Set" doc:id="cd619a7a-f2b5-4d8a-8322-10a86b1ad01f" config-ref="Redis_Redis" key="data">
+			<redis:value><![CDATA[#[output text/plain --- write(payload, 'application/json')]]]></redis:value>
+		</redis:set>
+		<redis:get doc:name="Get" doc:id="591449dc-0a0d-4396-ad8b-5689fd0d57a8" key="data" config-ref="Redis_Redis"/>
+	</flow>
+	<flow name="demo-apiFlow" doc:id="b4d8e25f-59b7-4cae-b551-b0d96a2ba7f4" >
+		<http:listener doc:name="Listener" doc:id="6f34ab0a-3fad-4896-8f6a-e01a6d683a26" config-ref="HTTP_Listener_config" path="/hello">
+			<http:error-response >
+				<http:body ><![CDATA[#[output application/json --- payload]]]></http:body>
+			</http:error-response>
+		</http:listener>
+		<choice doc:name="Choice" doc:id="67a2418f-17e2-455a-ba6f-4159aa2ff278" >
+			<when expression="#[payload.radisStore]">
+				<flow-ref doc:name="Flow Reference" doc:id="3edff8ed-d3e2-4bd1-ab47-224872879700" name="demo-apiFlow1" />
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Transform Message" doc:id="988e5d3f-9a67-4b46-803f-eab82c284978">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"Message": "Hello " ++ (payload.name)
+}]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+				<ee:set-variable variableName="payload"><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+			</otherwise>
+		</choice>
+		<logger level="INFO" doc:name="Logger" doc:id="3468058b-314b-41b7-a977-0049b2658271" message="#[payload]" category="LOKI"/>
+		<error-handler ref="demo-apiError_Handler" />
+	</flow>
+	<error-handler name="demo-apiError_Handler" doc:id="4ad35767-6b33-4e2e-9873-04c2a0d3e87a" >
+		<on-error-propagate enableNotifications="false" logException="false" doc:name="On Error Propagate" doc:id="cc21d3d2-37cb-4fa5-a4a3-e244739243bb" type="ANY">
+			<ee:transform doc:name="Transform Message" doc:id="f29649cd-790c-4da5-9a65-c9629e579a6e" >
+				<ee:message >
+					<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+    correlationId: correlationId,
+    error: {
+        description: error.description,
+        detailedDescription: error.detailedDescription,
+        errorType: error.errorType.identifier,
+        namespace: error.errorType.namespace,
+        component: error.failingComponent
+    },
+    payload: payload
+}]]></ee:set-payload>
+				</ee:message>
+			</ee:transform>
+			<logger level="ERROR" doc:name="Logger" doc:id="d8fafa7f-15d6-4fb4-ad41-07cbfe79000e" message="#[payload]" category="LOKI"/>
+		</on-error-propagate>
+	</error-handler>
+</mule>
