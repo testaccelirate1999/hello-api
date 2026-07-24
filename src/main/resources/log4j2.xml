@@ -19,7 +19,7 @@
                 <Pattern>%-5p %d [%t] %c: %m%n</Pattern>
             </PatternLayout>
 
-            <Label name="app" value="mule-app"/>
+            <Label name="app" value="demo-api"/>
             <Label name="env" value="cloudhub2"/>
             <LogLevelLabel>log_level</LogLevelLabel>
         </Loki>
